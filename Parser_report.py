@@ -14,7 +14,6 @@ def init_class_objects(filename):
 	with open(filename,"r", encoding="UTF-8") as f:
 		for row in csv.reader(f, delimiter=";"):
 			if any(field.strip() for field in row):
-				print(row[0])
 				match row[0]:
 					case "Бакалавриат":
 						count_bak += 1
@@ -35,7 +34,6 @@ def init_class_objects(filename):
 			if any(field.strip() for field in row):
 				match row[0]:
 					case "Бакалавриат":
-						print("da2")
 						bak_object[cb].type_of_profile = row[1]
 						bak_object[cb].type_of_direction = row[2]
 						cb += 1
@@ -80,9 +78,25 @@ def reader(filename):
 
 def output():
 	for i in range(count_bak):
-		print(bak_object[i].type_id + " " + bak_object[i].type_of_profile + " " + bak_object[i].type_of_direction + " среднее по 1 вопросу: " + str(bak_object[i].avgqwn1))
+		print(bak_object[i].type_id + " "
+			  + bak_object[i].type_of_profile + " "
+			  + bak_object[i].type_of_direction
+			  + " среднее по 1 вопросу: " + str(bak_object[i].avgqwn[0])
+			  + " в опросе приняло участие: " + str(bak_object[i].counter))
 	for i in range(count_mag):
-		print(mag_object[i].type_id + " " + mag_object[i].type_of_profile + " " + mag_object[i].type_of_direction + " среднее по 1 вопросу: " + str(mag_object[i].avgqwn1))
+		print(mag_object[i].type_id + " "
+			  + mag_object[i].type_of_profile + " "
+			  + mag_object[i].type_of_direction
+			  + " среднее по 1 вопросу: " + str(mag_object[i].avgqwn[0])
+			  + " в опросе приняло участие: " + str(mag_object[i].counter))
+
+	for i in range(count_spec):
+		print(spec_object[i].type_id + " "
+		+ spec_object[i].type_of_profile + " "
+		+ spec_object[i].type_of_direction \
+		+ " среднее по 1 вопросу: " + str(spec_object[i].avgqwn[0])
+		+ " в опросе приняло участие: " + str(spec_object[i].counter))
+
 
 class use_normal_string:
 	def __init__(self, text):
@@ -91,83 +105,69 @@ class use_normal_string:
 	def bak(self):
 		for i in range(count_bak):
 			if self.m[1] == bak_object[i].type_of_profile and self.m[2] == bak_object[i].type_of_direction:
-				print("da")
-				bak_object[i].change_culc(self.m[3],self.m[4],self.m[5],self.m[6])  #ИНДЕКСЫ М ПО ПОРЯДКУ ВОПРОСОВ
+				questions = []
+				for item in self.m:
+					if item.replace(" ","").isdigit():
+						questions.append(item)
+				bak_object[i].change_culc(questions)  #ИНДЕКСЫ М ПО ПОРЯДКУ ВОПРОСОВ
+
 	def mag(self):
 		for i in range(count_mag):
 			if self.m[1] == mag_object[i].type_of_profile and self.m[2] == mag_object[i].type_of_direction:
-				mag_object[i].change_culc(self.m[3],self.m[4],self.m[5],self.m[6])
+				questions = []
+				for item in self.m:
+					if item.replace(" ", "").isdigit():
+						questions.append(item)
+				mag_object[i].change_culc(questions)  # ИНДЕКСЫ М ПО ПОРЯДКУ ВОПРОСОВ
+
 	def spec(self):
 		for i in range(count_spec):
 			if self.m[1] == spec_object[i].type_of_profile and self.m[2] == spec_object[i].type_of_direction:
-				spec_object[i].change_culc(self.m[3],self.m[4],self.m[5],self.m[6])
+				questions = []
+				for item in self.m:
+					if item.replace(" ", "").isdigit():
+						questions.append(item)
+				spec_object[i].change_culc(questions)  # ИНДЕКСЫ М ПО ПОРЯДКУ ВОПРОСОВ
 
 class Bakalavriat:
 	def __init__(self, name_id):
 		self.name_id = name_id
-		self.type_id = "Бакалавриат"
+		self.type_id = "Бакалавриат " + self.name_id
 		self.type_of_profile = ""
 		self.type_of_direction = ""
+		self.init_questions_0()
+
+	def init_questions_0(self):
 		self.counter = 0
-		self.qwn1 = 0					#Тут индекы вопросов
-		self.qwn2 = 0
-		self.qwn3 = 0
-		self.qwn4 = 0
-		self.avgqwn1 = 0				#ТУТ СРЕДНИЕ МЕЖДУ КАКИМИ
-		self.avgqwn2 = 0
-		self.avgqwn3 = 0
-		self.avgqwn4 = 0
+		self.qwns = []
+		self.avgqwn = []
+		for i in range(9):
+			self.qwns.append(0)
+			self.avgqwn.append(0.5)
 		self.avgqwn1_2 = 0
 		self.avgqwn3_4 = 0
 
-	def change_culc(self, q1, q2, q3, q4):    #Добавить количествог вопросов ДОПИСАТЬ КУШКИ
+	def change_culc(self, q):    #Добавить количествог вопросов ДОПИСАТЬ КУШКИ
 		self.counter += 1
-		self.qwn1 += int(q1)
-		self.qwn2 += int(q2)
-		self.qwn3 += int(q3)
-		self.qwn4 += int(q4)
-		self.avgqwn1 = self.qwn1 / self.counter
-		self.avgqwn2 = self.qwn2 / self.counter
-		self.avgqwn3 = self.qwn3 / self.counter
-		self.avgqwn4 = self.qwn4 / self.counter
-		self.avgqwn1_2 = self.avgqwn1 + self.avgqwn2
-		self.avgqwn3_4 = self.avgqwn3 + self.avgqwn4
+		for i in range(len(q)):
+			self.qwns[i] += int(q[i])
+			self.avgqwn[i] = self.qwns[i] / self.counter
 
 class Magistratura(Bakalavriat):
 	def __init__(self, name_id):
 		self.name_id = name_id
-		self.type_id = "Магистратура"
+		self.type_id = "Магистратура " + self.name_id
 		self.type_of_profile = ""
 		self.type_of_direction = ""
-		self.counter = 0
-		self.qwn1 = 0
-		self.qwn2 = 0
-		self.qwn3 = 0
-		self.qwn4 = 0
-		self.avgqwn1 = 0
-		self.avgqwn2 = 0
-		self.avgqwn3 = 0
-		self.avgqwn4 = 0
-		self.avgqwn1_2 = 0
-		self.avgqwn3_4 = 0
-		
+		self.init_questions_0()
+
 class Specialitet(Bakalavriat):
 	def __init__(self, name_id):
 		self.name_id = name_id
-		self.type_id = "Специалитет"
+		self.type_id = "Специалитет " + self.name_id
 		self.type_of_profile = ""
 		self.type_of_direction = ""
-		self.counter = 0
-		self.qwn1 = 0
-		self.qwn2 = 0
-		self.qwn3 = 0
-		self.qwn4 = 0
-		self.avgqwn1 = 0
-		self.avgqwn2 = 0
-		self.avgqwn3 = 0
-		self.avgqwn4 = 0
-		self.avgqwn1_2 = 0
-		self.avgqwn3_4 = 0
+		self.init_questions_0()
 
 init_class_objects("n_list.csv")
 reader("input.csv")
