@@ -1,5 +1,6 @@
 import csv
 import re
+import report_in_docx as re_docx
 
 def init_class_objects(filename):
 	global count_bak
@@ -78,6 +79,10 @@ def reader(filename):
 
 def output():
 	for i in range(count_bak):
+		re_docx.reporting(bak_object[i].counter, percent_answers,
+						  bak_object[i].type_id,
+						  bak_object[i].type_of_profile,
+						  type_of_discipline, avgqwn)
 		print(bak_object[i].type_id + " "
 			  + bak_object[i].type_of_profile + " "
 			  + bak_object[i].type_of_direction
@@ -144,8 +149,6 @@ class Bakalavriat:
 		for i in range(9):
 			self.qwns.append(0)
 			self.avgqwn.append(0.5)
-		self.avgqwn1_2 = 0
-		self.avgqwn3_4 = 0
 
 	def change_culc(self, q):    #Добавить количествог вопросов ДОПИСАТЬ КУШКИ
 		self.counter += 1
