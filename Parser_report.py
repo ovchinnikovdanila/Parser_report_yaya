@@ -79,10 +79,13 @@ def reader(filename):
 
 def output():
 	for i in range(count_bak):
+		percent_answers = 80
 		re_docx.reporting(bak_object[i].counter, percent_answers,
 						  bak_object[i].type_id,
 						  bak_object[i].type_of_profile,
-						  type_of_discipline, avgqwn)
+						  bak_object[i].type_of_direction,
+						  bak_object[i].avgqwn)
+
 		print(bak_object[i].type_id + " "
 			  + bak_object[i].type_of_profile + " "
 			  + bak_object[i].type_of_direction
